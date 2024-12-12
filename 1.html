@@ -52,8 +52,8 @@
     </style>
 
 <script>
-  window.onload = function () 
-  {    CollectCheckout.redirectToCheckout({
+ document.getElementById('redirectLink').addEventListener('click', function(e) {
+    CollectCheckout.redirectToCheckout({
         lineItems : [
             {
                 sku: "0001",
