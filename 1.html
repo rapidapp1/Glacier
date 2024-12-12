@@ -50,3 +50,22 @@
             transition: 200ms;
         }
     </style>
+
+<script>
+document.getElementById('redirectLink').addEventListener('click', function(e) {
+    CollectCheckout.redirectToCheckout({
+        lineItems : [
+            {
+                sku: "0001",
+                quantity: 2,
+            }
+        ],
+        successUrl: "https://secure.safewebservices.com/merchants/resources/integration/examples/collect_checkout/receipt.php",
+        cancelUrl: "https://secure.safewebservices.com/merchants/resources/integration/examples/collect_checkout/cancel.php"
+    }).then( (error) => {
+        console.log(error);
+    });
+});
+</script>
+
+       
