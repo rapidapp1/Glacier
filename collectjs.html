@@ -200,4 +200,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+collect.on('success', function(response) {
+    console.log('Full Response:', response); // Logs all available data
+
+    fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response), // Send the full response object
+    })
+    .then(res => res.json())
+    .then(data => console.log('Data sent successfully:', data))
+    .catch(error => console.error('Error:', error));
+});
 </script>
