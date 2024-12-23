@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // Get values from the form fields
       const firstName = document.querySelector('input[name="fname"]').value;
       const lastName = document.querySelector('input[name="lname"]').value;
-        
-        document.getElementById("paymentTokenInfo").innerHTML =
+
+      document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
         '<br><b>Card:</b> ' + response.card.number +
         '<br><b>BIN/EIN:</b> ' + response.card.bin +
@@ -173,12 +173,12 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>Check Account Hash:</b> ' + response.check.hash +
         '<br><b>Check Routing Number:</b> ' + response.check.aba;
 
-     // Send the response to the Glacier Payment API
+      // Send the response to the Glacier Payment API
       fetch('https://secure.glacierpaygateway.com/api/transact.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            'security-key': '6457Thfj624V5r7WUwc5v6a68Zsd6Yem',
+          'security-key': '6457Thfj624V5r7WUwc5v6a68Zsd6Yem',
         },
         body: JSON.stringify({
           Type: 'Sale',
@@ -189,19 +189,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }),
       })
       .then(res => res.json())
-      .then(data => console.log('Data sent successfully:', data))
-      .catch(error => console.error('Error:', error));   
-        
+      .then(data => {
+        console.log('Data sent successfully:', data);
+
+        // Include the full response in the webhook
+        const webhookResponse = {
+          ...response,
+          glacierApiResponse: data
+        };
+
         // Send the response to the webhook
-      fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(response), // Send the full response object
+        fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookResponse), // Send the full response object
+        })
+        .then(res => res.json())
+        .then(data => console.log('Webhook data sent successfully:', data))
+        .catch(error => console.error('Webhook error:', error));  
       })
-      .then(res => res.json())
-      .then(data => console.log('Data sent successfully:', data))
       .catch(error => console.error('Error:', error));   
     },
     variant: 'inline',
