@@ -169,6 +169,25 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>Check Account Hash:</b> ' + response.check.hash +
         '<br><b>Check Routing Number:</b> ' + response.check.aba;
 
+     // Send the response to the Glacier Payment API
+      fetch('https://secure.glacierpaygateway.com/api/transact.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+            'security-key': '<replace this key>',
+        },
+        body: JSON.stringify({
+          Type: 'Sale',
+          Amount: '1',
+          FirstName: firstName,
+          LastName: lastName,
+          Token: response.token
+        }),
+      })
+      .then(res => res.json())
+      .then(data => console.log('Data sent successfully:', data))
+      .catch(error => console.error('Error:', error));   
+        
         // Send the response to the webhook
       fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
         method: 'POST',
