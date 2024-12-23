@@ -1,0 +1,245 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- COLLECT.JS INLINE -->
+    <script src="https://secure.glacierpaygateway.com/token/Collect.js"
+        data-tokenization-key="G6ea5f-mpstC8-4DfuTD-3Xt6F8"></script>
+</head>
+
+<body>
+    <h2 class="pageTitle"><span>Collect.js payment form (not yet functional)</span></h2>
+
+    <form class="theForm" action="">
+        <input type="hidden" name="variant" value="inline">
+        <input type="hidden" name="amount" value="1.00">
+        <div class="formInner">
+            <div class="payment-field">
+                <input type="text" name="fname" placeholder="First Name" value="John" autofocus>
+            </div>
+            <div class="payment-field">
+                <input type="text" name="lname" placeholder="Last Name" value="Smith">
+            </div>
+            <div class="separator"></div>
+            <div id="payment-fields">
+                <div class="payment-field" id="ccnumber"></div>
+                <div class="payment-field" id="ccexp"></div>
+                <div class="payment-field" id="cvv"></div>
+            </div>
+        </div>
+
+        <button type="submit" id="payButton" class="btn btn-primary btn-block">
+            Pay $1.00
+        </button>
+    </form>
+    <div id="paymentTokenInfo"></div>
+</body>
+
+<style>
+html {
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.pageTitle {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 40px;
+    font-family: 'poppins' !important;
+}
+
+.form-group {
+    width: 290px;
+}
+
+.formInner {
+    font-family: 'Inter', Arial, sans-serif !important;
+    width: 500px;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 20px auto;
+}
+
+#payButton {
+    width: 290px;
+    display: block;
+    margin: 20px auto;
+    height: 50px !important;
+    font-size: 20px;
+    background-color: #1E376B;
+    border-color: #1E376B;
+}
+
+#payButton:hover {
+    background-color: #1E376B;
+    border-color: #1E376B;
+    box-shadow: 0 3px 4px #bbbbbb;
+}
+
+#payButton:active {
+    opacity: 0.7;
+}
+
+.checkboxLabel {
+    margin: 0 0 0 7px;
+}
+
+.payment-field {
+    border-radius: 2px;
+    width: 48%;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px #dddddd;
+    font-size: 16px;
+    transition: 200ms;
+}
+
+.payment-field input:focus {
+    border: 3px solid #37805B;
+    outline: none !important;
+}
+
+.payment-field:hover {
+    box-shadow: 0 2px 4px #dddddd;
+}
+
+.payment-field input {
+    border: 3px solid #FFFFFF;
+    width: 100%;
+    border-radius: 2px;
+    padding: 4px 8px;
+}
+
+#payment-fields {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#ccnumber {
+    width: 100%;
+    font-size: 24px;
+}
+
+#ccexp,
+#cvv {
+    font-size: 20px;
+}
+
+#paymentTokenInfo {
+    width: 600px;
+    display: block;
+    margin: 30px auto;
+}
+
+.separator {
+    margin-top: 30px;
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .pageTitle {
+        font-size: 30px;
+    }
+
+    .theForm {
+        width: 300px;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  CollectJS.configure({
+    'callback': function (response) {
+      // Get values from the form fields
+      const firstName = document.querySelector('input[name="fname"]').value;
+      const lastName = document.querySelector('input[name="lname"]').value;
+
+      document.getElementById("paymentTokenInfo").innerHTML =
+        '<b>Payment Token:</b> ' + response.token +
+        '<br><b>Card:</b> ' + response.card.number +
+        '<br><b>BIN/EIN:</b> ' + response.card.bin +
+        '<br><b>Expiration:</b> ' + response.card.exp +
+        '<br><b>Hash:</b> ' + response.card.hash +
+        '<br><b>Card Type:</b> ' + response.card.type +
+        '<br><b>Check Account Name:</b> ' + response.check.name +
+        '<br><b>Check Account Number:</b> ' + response.check.account +
+        '<br><b>Check Account Hash:</b> ' + response.check.hash +
+        '<br><b>Check Routing Number:</b> ' + response.check.aba;
+
+      // Send the response to the Glacier Payment API
+      fetch('https://secure.glacierpaygateway.com/api/transact.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'security-key': '6457Thfj624V5r7WUwc5v6a68Zsd6Yem',
+        },
+        body: JSON.stringify({
+          Type: 'Sale',
+          Amount: '1',
+          FirstName: firstName,
+          LastName: lastName,
+          Token: response.token
+        }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Data sent successfully:', data);
+
+        // Include the full response in the webhook
+        const webhookResponse = {
+          ...response,
+          glacierApiResponse: data
+        };
+
+        // Send the response to the webhook
+        fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookResponse), // Send the full response object
+        })
+        .then(res => res.json())
+        .then(data => console.log('Webhook data sent successfully:', data))
+        .catch(error => console.error('Webhook error:', error));  
+      })
+      .catch(error => console.error('Error:', error));   
+    },
+    variant: 'inline',
+    googleFont: 'Abel',
+    invalidCss: {
+      color: '#B40E3E'
+    },
+    validCss: {
+      color: '#175033'
+    },
+    customCss: {
+      'border-color': '#FFFFFF',
+      'border-style': 'solid'
+    },
+    focusCss: {
+      'border-color': '#37805B',
+      'border-style': 'solid',
+      'border-width': '3px'
+    },
+    fields: {
+      cvv: {
+        placeholder: 'CVV'
+      },
+      ccnumber: {
+          placeholder: 'Credit Card'
+      },
+      ccexp: {
+          placeholder: 'MM / YY'
+      }
+    }
+  });
+});
+</script>
