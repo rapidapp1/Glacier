@@ -157,7 +157,11 @@ html {
 document.addEventListener('DOMContentLoaded', function () {
   CollectJS.configure({
     'callback': function (response) {
-      document.getElementById("paymentTokenInfo").innerHTML =
+      // Get values from the form fields
+      const firstName = document.querySelector('input[name="fname"]').value;
+      const lastName = document.querySelector('input[name="lname"]').value;
+        
+        document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
         '<br><b>Card:</b> ' + response.card.number +
         '<br><b>BIN/EIN:</b> ' + response.card.bin +
@@ -174,13 +178,13 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            'security-key': '<replace this key>',
+            'security-key': '6457Thfj624V5r7WUwc5v6a68Zsd6Yem',
         },
         body: JSON.stringify({
           Type: 'Sale',
           Amount: '1',
-          FirstName: firstName,
-          LastName: lastName,
+          FirstName: fname,
+          LastName: lname,
           Token: response.token
         }),
       })
