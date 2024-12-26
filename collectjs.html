@@ -22,6 +22,9 @@
             <div class="payment-field">
                 <input type="email" name="email" placeholder="Email" value="john.smith@example.com">
             </div>
+            <div class="payment-field">
+                <input type="text" name="dotnumber" placeholder="DOT Number">
+            </div>
             <div class="separator"></div>
             <div id="payment-fields">
                 <div class="payment-field" id="ccnumber"></div>
@@ -164,11 +167,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const fname = document.querySelector('input[name="fname"]').value;
       const lname = document.querySelector('input[name="lname"]').value;
       const email = document.querySelector('input[name="email"]').value;
+      const dotnumber = document.querySelector('input[name="dotnumber"]').value;
 
       // Add values to the response object
       response.fname = fname;
       response.lname = lname;
       response.email = email;
+      response.dotnumber = dotnumber;
 
       document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
@@ -183,7 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>Check Routing Number:</b> ' + response.check.aba +
         '<br><b>First Name:</b> ' + response.fname +
         '<br><b>Last Name:</b> ' + response.lname +
-        '<br><b>Email:</b> ' + response.email;
+        '<br><b>Email:</b> ' + response.email +
+        '<br><b>DOT Number:</b> ' + response.dotnumber;
 
       // Send the response to the webhook
       fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/3dd4a6e8-20b3-46d2-b9d2-bdecab76426d', {
