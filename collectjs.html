@@ -19,6 +19,9 @@
             <div class="payment-field">
                 <input type="text" name="lname" placeholder="Last Name" value="Smith">
             </div>
+            <div class="payment-field">
+                <input type="email" name="email" placeholder="Email" value="john.smith@example.com">
+            </div>
             <div class="separator"></div>
             <div id="payment-fields">
                 <div class="payment-field" id="ccnumber"></div>
@@ -157,13 +160,15 @@ html {
 document.addEventListener('DOMContentLoaded', function () {
   CollectJS.configure({
     'callback': function (response) {
-      // Get the first name and last name values from the form
+      // Get the form values
       const fname = document.querySelector('input[name="fname"]').value;
       const lname = document.querySelector('input[name="lname"]').value;
+      const email = document.querySelector('input[name="email"]').value;
 
-      // Add fname and lname to the response object
+      // Add values to the response object
       response.fname = fname;
       response.lname = lname;
+      response.email = email;
 
       document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
@@ -177,7 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>Check Account Hash:</b> ' + response.check.hash +
         '<br><b>Check Routing Number:</b> ' + response.check.aba +
         '<br><b>First Name:</b> ' + response.fname +
-        '<br><b>Last Name:</b> ' + response.lname;
+        '<br><b>Last Name:</b> ' + response.lname +
+        '<br><b>Email:</b> ' + response.email;
 
       // Send the response to the webhook
       fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
