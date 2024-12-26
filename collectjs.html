@@ -157,6 +157,14 @@ html {
 document.addEventListener('DOMContentLoaded', function () {
   CollectJS.configure({
     'callback': function (response) {
+      // Get the first name and last name values from the form
+      const fname = document.querySelector('input[name="fname"]').value;
+      const lname = document.querySelector('input[name="lname"]').value;
+
+      // Add fname and lname to the response object
+      response.fname = fname;
+      response.lname = lname;
+
       document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
         '<br><b>Card:</b> ' + response.card.number +
@@ -167,9 +175,11 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>Check Account Name:</b> ' + response.check.name +
         '<br><b>Check Account Number:</b> ' + response.check.account +
         '<br><b>Check Account Hash:</b> ' + response.check.hash +
-        '<br><b>Check Routing Number:</b> ' + response.check.aba;
-    
-        // Send the response to the webhook
+        '<br><b>Check Routing Number:</b> ' + response.check.aba +
+        '<br><b>First Name:</b> ' + response.fname +
+        '<br><b>Last Name:</b> ' + response.lname;
+
+      // Send the response to the webhook
       fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/b0d54525-3ed5-480c-b306-b9ce22975fb9', {
         method: 'POST',
         headers: {
