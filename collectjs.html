@@ -25,6 +25,21 @@
             <div class="payment-field">
                 <input type="text" name="dotnumber" placeholder="DOT Number">
             </div>
+            <div class="payment-field">
+                <input type="text" name="address1" placeholder="Address 1">
+            </div>
+            <div class="payment-field">
+                <input type="text" name="address2" placeholder="Address 2">
+            </div>
+            <div class="payment-field">
+                <input type="text" name="city" placeholder="City">
+            </div>
+            <div class="payment-field">
+                <input type="text" name="state" placeholder="State">
+            </div>
+            <div class="payment-field">
+                <input type="text" name="zip" placeholder="Zip">
+            </div>
             <div class="separator"></div>
             <div id="payment-fields">
                 <div class="payment-field" id="ccnumber"></div>
@@ -168,12 +183,22 @@ document.addEventListener('DOMContentLoaded', function () {
       const lname = document.querySelector('input[name="lname"]').value;
       const email = document.querySelector('input[name="email"]').value;
       const dotnumber = document.querySelector('input[name="dotnumber"]').value;
+      const address1 = document.querySelector('input[name="address1"]').value;
+      const address2 = document.querySelector('input[name="address2"]').value;
+      const city = document.querySelector('input[name="city"]').value;
+      const state = document.querySelector('input[name="state"]').value;
+      const zip = document.querySelector('input[name="zip"]').value;
 
       // Add values to the response object
       response.fname = fname;
       response.lname = lname;
       response.email = email;
       response.dotnumber = dotnumber;
+      response.address1 = address1;
+      response.address2 = address2;
+      response.city = city;
+      response.state = state;
+      response.zip = zip;
 
       document.getElementById("paymentTokenInfo").innerHTML =
         '<b>Payment Token:</b> ' + response.token +
@@ -189,7 +214,12 @@ document.addEventListener('DOMContentLoaded', function () {
         '<br><b>First Name:</b> ' + response.fname +
         '<br><b>Last Name:</b> ' + response.lname +
         '<br><b>Email:</b> ' + response.email +
-        '<br><b>DOT Number:</b> ' + response.dotnumber;
+        '<br><b>DOT Number:</b> ' + response.dotnumber +
+        '<br><b>Address 1:</b> ' + response.address1 +
+        '<br><b>Address 2:</b> ' + response.address2 +
+        '<br><b>City:</b> ' + response.city +
+        '<br><b>State:</b> ' + response.state +
+        '<br><b>Zip:</b> ' + response.zip;
 
       // Send the response to the webhook
       fetch('https://go.glideapps.com/api/container/plugin/webhook-trigger/nzdg71j7kqVL5k7Tt0sD/3dd4a6e8-20b3-46d2-b9d2-bdecab76426d', {
